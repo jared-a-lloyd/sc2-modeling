@@ -4,3 +4,6 @@ data/*
 # ignore SC2Replay files
 *.SC2Replay
 *.zip
+
+# ignore commit message
+commit-message*
