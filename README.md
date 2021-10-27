@@ -8,7 +8,7 @@ Ultimately, this will be an attempt to generalize the means of observing games i
 
 Replays were downloaded from __[SpawningTool](https://lotv.spawningtool.com)__.
 
-The project is constructed as a series of Jupyter notebooks as part of my Brainstation capstone project.
+The project is constructed as a series of Jupyter notebooks as part of my Brainstation capstone project. I hope to be able to link all the notebooks to simulate a workflow from one notebook to the next.
 
 ## Contents
 * `web_scraping/`
