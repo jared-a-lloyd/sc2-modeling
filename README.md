@@ -6,7 +6,7 @@ The initial attempt is using the `sc2reader` python package, which can be instal
 
 Ultimately, this will be an attempt to generalize the means of observing games in order to automatically determine optimal hotkey layouts. But the potential would exist for this ability to extend to other programs such as Excel or IDEs - where hotkey use is prefered.
 
-Replays were downloaded from __[SpawningTool]('https://lotv.spawningtool.com')__.
+Replays were downloaded from __[SpawningTool](https://lotv.spawningtool.com)__.
 
 The project is constructed as a series of Jupyter notebooks as part of my Brainstation capstone project.
 
@@ -16,7 +16,7 @@ The project is constructed as a series of Jupyter notebooks as part of my Brains
     * `extract_and_map.ipynb` - Creating a json map of the files that are downloaded, and unzipping all .zip to their own folders.
 * `get_replay_data/`
     * `explore_data_structure.ipynb` - Unpacking an individual replay into a json dict and mapping out the generalised layout of data within the replay using `sc2reader`.
-* info
+* `info/`
     * `A tutorial on sc2reader_ events and units _ MGD’s blog.pdf' - A basic tutorial on interfacing with `sc2reader` found online
     * `event_attribute_dict.json` - A json map of the layout of data within the events section of a `sc2reader` output.
     * `replay_json.json` - The general layout of an `sc2reader` object from the top level down.
