@@ -1,6 +1,6 @@
 # SC2 Keyboard Hotkey Modeling
 
-This project is an attempt to use avaialable resources to extract and map the most common actions that users take while playing StarCraft 2. The goal is an attempt to automate improving of hotkey layout for the most ergonomic layout (i.e., least average travel time for the fingers)
+This project is an attempt to use available resources to extract and map the most common actions that users take while playing StarCraft 2. The goal is an attempt to automate improving of hotkey layout for the most ergonomic layout (i.e., least average travel time for the fingers)
 
 The initial attempt is using the `sc2reader` python package, which can be install by PiP, or found __[here](https://github.com/ggtracker/sc2reader)__ to extract all events from a replay. Events will then be binned according to type (keyboard, mouse, no user interaction), and the keyboard related actions mapped to their default hotkeys. Upon analyzing all replays available the most common hotkey combinations (overall and by race) will be used to attempt rearranging the default hotkey setup assuming that the 'home keys' are WASD, as is the case for most games.
 
