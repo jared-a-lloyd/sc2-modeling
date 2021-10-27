@@ -15,7 +15,7 @@ The project is constructed as a series of Jupyter notebooks as part of my Brains
     * `download_spawning.ipynb` - Automating the download of replay files as .zip.
     * `extract_and_map.ipynb` - Creating a json map of the files that are downloaded, and unzipping all .zip to their own folders.
 * `get_replay_data/`
-    * `explore_data_structure.ipynb` - Unpacking an individual replay into a json dict and mapping out the generalised layout of data within the replay using `sc2reader`.
+    * `explore_data_structure.ipynb` - Unpacking an individual replay into a json dict and mapping out the generalised layout of data within the replay using `sc2reader`. Uses multithreading to speed up the process.
 * `info/`
     * `A tutorial on sc2reader_ events and units _ MGD’s blog.pdf' - A basic tutorial on interfacing with `sc2reader` found online
     * `event_attribute_dict.json` - A json map of the layout of data within the events section of a `sc2reader` output.
