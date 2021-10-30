@@ -8,7 +8,7 @@ It is hoped that a secondary outcome of the modeling process will be an predicti
 
 Data are extracted using the `sc2reader` python package, which can be install by PiP, or found __[here](https://github.com/ggtracker/sc2reader)__. In the raw form, `sc2reader` provides events at each frame of the game (a frame is about a 16th of an in-game second - and an in-game second is 1&divide;1.2 &asymp; 0.83 real-time seconds).
 
-Replays were downloaded from __[SpawningTool](https://lotv.spawningtool.com)__.
+Replays were downloaded from __[SpawningTool](https://lotv.spawningtool.com/replays/)__.
 
 The project is constructed as a series of Jupyter notebooks as part of my Brainstation capstone project. I hope to be able to link all the notebooks to simulate a workflow from one notebook to the next.
 
@@ -18,6 +18,7 @@ The project is constructed as a series of Jupyter notebooks as part of my Brains
     * `extract_and_map.ipynb` - Creating a json map of the files that are downloaded, and unzipping all .zip to their own folders.
 * `get_replay_data/`
     * `explore_data_structure.ipynb` - Unpacking an individual replay into a json dict and mapping out the generalised layout of data within the replay using `sc2reader`. Uses multithreading to speed up the process.
+    * `Exploratory_Data_Analysis.ipynb` - Exploring the data structure of the replay using `sc2reader`.
 * `info/`
     * `A tutorial on sc2reader_ events and units _ MGD’s blog.pdf' - A basic tutorial on interfacing with `sc2reader` found online
     * `event_attribute_dict.json` - A json map of the layout of data within the events section of a `sc2reader` output.
