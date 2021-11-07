@@ -13,3 +13,6 @@ commit-message*
 
 # ignore workspace files
 .vscode*
+
+get_replays.py
+classes/*
