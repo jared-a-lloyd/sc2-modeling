@@ -9,6 +9,7 @@ import random
 import sc2reader
 from classes import ReplayInfo
 import pandas as pd
+import time
 
 def process_replay(filename):
     """
@@ -37,6 +38,9 @@ def process_replay(filename):
     return replay_object
 
 if __name__ == "__main__":
+
+    # start timer
+    timer = time.time()
 
     # load settings
     with open("replay_settings.json", "r") as f:
@@ -107,4 +111,4 @@ if __name__ == "__main__":
     # write replay_collection to csv with no index
     replay_df.to_csv('../data/replays.csv', index=False)
 
-    print(f"Replays processed = {replay_df.shape[0]}.")
+    print(f"Replays processed = {replay_df.shape[0]} in {time.time() - timer} seconds")

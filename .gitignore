@@ -16,3 +16,5 @@ commit-message*
 
 get_replays.py
 classes/*
+
+*.pyc
