@@ -7,10 +7,10 @@ import sys
 import multiprocessing as mp
 import random
 import sc2reader
-from ..classes import ReplayInfo
+from classes import ReplayInfo
 import pandas as pd
 
-def process_replay(filename, filters=None):
+def process_replay(filename):
     """
     process_replay
     ___________________________________________________________________________
@@ -34,11 +34,10 @@ def process_replay(filename, filters=None):
 
     replay_object = ReplayInfo(replay)
 
-    # TODO: check if replay is valid using filters from settings
-
     return replay_object
 
 if __name__ == "__main__":
+
     # load settings
     with open("replay_settings.json", "r") as f:
         settings = json.load(f)
@@ -48,6 +47,9 @@ if __name__ == "__main__":
 
     # get sample size from settings
     sample_size = settings["sample_size"]
+
+    # get n_jobs from settings
+    n_jobs = settings["n_jobs"]
 
     # get random seed from settings
     # check if random_seed key exists
@@ -64,16 +66,22 @@ if __name__ == "__main__":
                 filepath = os.path.join(dirpath, filename)
                 replays_list.append(filepath)
 
-    # take a random sample of replays
-    random.seed(random_seed)
-    replays_list = random.sample(replays_list, sample_size)
+    if sample_size != -1:
+        # take a random sample of replays
+        random.seed(random_seed)
+        replays_list = random.sample(replays_list, sample_size)
 
     # process replays
-    with mp.Pool(mp.cpu_count()) as pool:
+    if n_jobs == -1:
+        cpu_total = mp.cpu_count()
+    else:
+        cpu_total = n_jobs
+
+    with mp.Pool(cpu_total) as pool:
         replay_collection = pool.map(
             process_replay,
-            replays_list,
-            [settings["filters"]]*len(replays_list))
+            replays_list
+        )
 
     # remove all None from replay_collection
     replay_collection = [x for x in replay_collection if x is not None]
