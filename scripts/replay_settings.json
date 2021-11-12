@@ -1,5 +1,6 @@
 {
-    "replay_dir": "C:/Users/jared/Gits/sc2-modeling/data/replays/",
+    "replay_dir": "C:/Users/jared/Gits/sc2-modeling/data/SpawningTool",
+    "output_file": "../data/replays.csv",
     "sample_size": -1,
     "n_jobs": -1
 }

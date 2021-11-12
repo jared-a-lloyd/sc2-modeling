@@ -33,7 +33,10 @@ def process_replay(filename):
     except: # catch exceptions created by sc2reader
         return None
 
-    replay_object = ReplayInfo(replay)
+    try:
+        replay_object = ReplayInfo(replay)
+    except: # catch exceptions created by ReplayInfo
+        return None
 
     return replay_object
 
@@ -54,6 +57,11 @@ if __name__ == "__main__":
 
     # get n_jobs from settings
     n_jobs = settings["n_jobs"]
+
+    # get output_file from settings
+    output_file = settings["output_file"]
+    if output_file == "":
+        output_file = '../data/replays.csv'
 
     # get random seed from settings
     # check if random_seed key exists
@@ -77,9 +85,11 @@ if __name__ == "__main__":
 
     # process replays
     if n_jobs == -1:
-        cpu_total = mp.cpu_count()
+        cpu_total = mp.cpu_count()-1
     else:
         cpu_total = n_jobs
+
+    print(f'Processing {len(replays_list)} replays')
 
     with mp.Pool(cpu_total) as pool:
         replay_collection = pool.map(
@@ -111,10 +121,17 @@ if __name__ == "__main__":
         ],
         'player2_highest_league':[
             x.highest_league[1] for x in replay_collection
-        ]
+        ],
+        'filehash':[x.filehash for x in replay_collection]
     })
 
-    # write replay_collection to csv with no index
-    replay_df.to_csv('../data/replays.csv', index=False)
+    # remove rows with duplicate filehashes
+    replay_df = replay_df.drop_duplicates(subset='filehash')
 
-    print(f"Replays processed = {replay_df.shape[0]} in {time.time() - timer} seconds")
+    # write replay_collection to csv with no index
+    replay_df.to_csv(output_file, index=False)
+
+    # found x valid replays
+    print(f'Found {replay_df.shape[0]} unique valid replays')
+    # print time elapsed as HH:MM:SS
+    print(f'Time elapsed: {time.strftime("%H:%M:%S", time.gmtime(time.time() - timer))}')

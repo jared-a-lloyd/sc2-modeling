@@ -16,7 +16,8 @@ class ReplayInfo:
         self.fps = replay.game_fps
         self.is_ladder = replay.is_ladder
         self.region = replay.region
-        self.highest_league = replay.highest_league
+        self.highest_league = self._get_player_highest_league(replay)
+        self.filehash = replay.filehash
 
 
     def _get_game_length(self, replay):
@@ -45,9 +46,13 @@ class ReplayInfo:
 
     def _get_player_highest_league(self, replay):
 
-        str_a = 'replay.initData.backup'
+        str_a = 'replay.initData'
         str_b = 'user_initial_data'
         str_c = 'highest_league'
+
+        # check that replay.initData exists in key
+        if str_a not in replay.raw_data.keys():
+            str_a = 'replay.initData.backup'
 
         return (
             replay.raw_data[str_a][str_b][0][str_c],
@@ -57,9 +62,13 @@ class ReplayInfo:
 
     def _get_player_mmrs(self, replay):
 
-        str_a = 'replay.initData.backup'
+        str_a = 'replay.initData'
         str_b = 'user_initial_data'
         str_c = 'scaled_rating'
+
+        # check that replay.initData exists in key
+        if str_a not in replay.raw_data.keys():
+            str_a = 'replay.initData.backup'
 
         return (
             replay.raw_data[str_a][str_b][0][str_c],
@@ -115,22 +124,24 @@ class ReplayInfo:
 
         for race in RACE_LIST:
 
-                if race.lower() in player.lower():
+            race_string = '('+race+')'
 
-                    # delete race from the player1 string
-                    race_string = ' ('+race+')'
-                    # assert that race_string is in player
-                    assert race_string in player, \
-                        f'{player} does not adhere to to {race_string} formatting'
-                    # use replace to delete the player race
-                    player = player.replace(race_string, '')
+            if race_string.lower() in player.lower():
 
-                    # create regex to find 'Player 1 - ' leaving only actual name
-                    reg_str = r'Player\s\d\s\-\s'
+                # delete race from the player1 string
 
-                    # assert that reg_str is in player string
-                    assert re.search(reg_str, player), \
-                        f'{player} does not adhere to to {reg_str} formatting'
+                # assert that race_string is in player
+                assert race_string in player, \
+                    f'{player} does not adhere to to {race_string} formatting'
+                # use replace to delete the player race
+                player = player.replace(race_string, '')
 
-                    return race
+                # create regex to find 'Player 1 - ' leaving only actual name
+                reg_str = r'Player\s\d\s\-\s'
+
+                # assert that reg_str is in player string
+                assert re.search(reg_str, player), \
+                    f'{player} does not adhere to to {reg_str} formatting'
+
+                return race
 
