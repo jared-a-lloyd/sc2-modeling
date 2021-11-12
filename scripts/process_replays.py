@@ -105,7 +105,13 @@ if __name__ == "__main__":
         'timestamp':[x.timestamp for x in replay_collection],
         'fps':[x.fps for x in replay_collection],
         'is_ladder':[x.is_ladder for x in replay_collection],
-        'region':[x.region for x in replay_collection]
+        'region':[x.region for x in replay_collection],
+        'player1_highest_league':[
+            x.highest_league[0] for x in replay_collection
+        ],
+        'player2_highest_league':[
+            x.highest_league[1] for x in replay_collection
+        ]
     })
 
     # write replay_collection to csv with no index

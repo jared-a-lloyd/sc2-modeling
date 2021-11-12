@@ -16,6 +16,7 @@ class ReplayInfo:
         self.fps = replay.game_fps
         self.is_ladder = replay.is_ladder
         self.region = replay.region
+        self.highest_league = replay.highest_league
 
 
     def _get_game_length(self, replay):
@@ -40,6 +41,19 @@ class ReplayInfo:
             return 2
         else:
             return 0
+
+
+    def _get_player_highest_league(self, replay):
+
+        str_a = 'replay.initData.backup'
+        str_b = 'user_initial_data'
+        str_c = 'highest_league'
+
+        return (
+            replay.raw_data[str_a][str_b][0][str_c],
+            replay.raw_data[str_a][str_b][1][str_c]
+            )
+
 
     def _get_player_mmrs(self, replay):
 
