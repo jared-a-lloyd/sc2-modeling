@@ -1,3 +1,9 @@
+"""
+Classes used in the analysis of replays.
+
+Current list:
+    - ReplayInfo - Extract metadata from replay files. (e.g. map, player names, etc.)
+"""
 import re
 
 class ReplayInfo:

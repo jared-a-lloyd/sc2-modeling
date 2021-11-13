@@ -18,3 +18,4 @@ get_replays.py
 classes/*
 
 *.pyc
+*.pkl
