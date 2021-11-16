@@ -3,11 +3,10 @@
 # settings can be found in replay_settings.json
 import json
 import os
-import sys
 import multiprocessing as mp
 import random
 import sc2reader
-from classes import ReplayInfo
+from scripts.classes import ReplayInfo
 import pandas as pd
 import time
 

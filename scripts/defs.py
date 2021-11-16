@@ -68,9 +68,7 @@ def get_all_events(filename, output_dir='data/events'):
     df = pd.DataFrame(event_data)
 
     # get the list of columns to be kept
-    columns_checklist = pd.read_csv(
-        'C:/Users/jared/Gits/sc2-modeling/info/raw_columns_list.csv'
-    )
+    columns_checklist = pd.read_csv('info/raw_columns_list.csv')
     column_keep_df = columns_checklist.loc[
         columns_checklist['include_bool'] == 1
     ].drop(['include_bool'], axis=1)
