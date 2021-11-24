@@ -41,11 +41,13 @@ def process_replay(filename):
 
 if __name__ == "__main__":
 
+    __spec__ = None # suppress warnings
+    
     # start timer
     timer = time.time()
 
     # load settings
-    with open("replay_settings.json", "r") as f:
+    with open("scripts/replay_settings.json", "r") as f:
         settings = json.load(f)
 
     # get replay directory from settings
@@ -60,7 +62,7 @@ if __name__ == "__main__":
     # get output_file from settings
     output_file = settings["output_file"]
     if output_file == "":
-        output_file = '../data/replays.csv'
+        output_file = 'data/replays.csv'
 
     # get random seed from settings
     # check if random_seed key exists
@@ -90,7 +92,7 @@ if __name__ == "__main__":
 
     print(f'Processing {len(replays_list)} replays')
 
-    with mp.Pool(cpu_total) as pool:
+    with mp.Pool(processes=cpu_total) as pool:
         replay_collection = pool.map(
             process_replay,
             replays_list
