@@ -134,8 +134,6 @@ class ReplayInfo:
 
             if race_string.lower() in player.lower():
 
-                # delete race from the player1 string
-
                 # assert that race_string is in player
                 assert race_string in player, \
                     f'{player} does not adhere to to {race_string} formatting'
@@ -150,4 +148,3 @@ class ReplayInfo:
                     f'{player} does not adhere to to {reg_str} formatting'
 
                 return race
-

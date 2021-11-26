@@ -19,7 +19,7 @@ def _get_event_data(event):
         event (sc2reader.event): Event object extracted from sc2reader.events
 
     Returns:
-        [dict]: A dictionary containing the event data
+        dictionary: A dictionary containing the event data
     """
     # ignore attributes that are not needed (special or dunder)
     event_attributes = [attr for attr in dir(event) if not attr.startswith('_')]
@@ -55,6 +55,9 @@ def get_all_events(filename, output_dir='data/events'):
     import os
     import pandas as pd
 
+    # assert that output_dir exists
+    assert os.path.isdir(output_dir), f'{output_dir} does not exist'
+
     # use sc2reader to extract replay data, load_level=4
     replay = sc2reader.load_replay(filename, load_level=4)
 
@@ -86,11 +89,11 @@ def get_all_events(filename, output_dir='data/events'):
         )
     ]
 
-    # name replay csv with the filehash of the replay
+    # name replay pkl with the filehash of the replay
     output_name = replay.filehash + '.pkl'
     output_path = os.path.join(output_dir, output_name)
 
-    # save the dataframe to a csv file
+    # save the dataframe to a pkl file
     df.to_pickle(output_path)
 
     return df
