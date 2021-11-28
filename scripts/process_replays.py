@@ -1,6 +1,8 @@
-# this file is used to process replays and extract the data
-# it is used as a separate script to allow for parallel processing
-# settings can be found in replay_settings.json
+"""
+This file is used to process replays and extract the data
+Tt is used as a separate script to allow for parallel processing
+Settings can be found in replay_settings.json
+"""
 import json
 import os
 import multiprocessing as mp
@@ -9,6 +11,7 @@ import sc2reader
 from scripts.classes import ReplayInfo
 import pandas as pd
 import time
+import tqdm
 
 def process_replay(filename):
     """
@@ -93,10 +96,13 @@ if __name__ == "__main__":
     print(f'Processing {len(replays_list)} replays')
 
     with mp.Pool(processes=cpu_total) as pool:
-        replay_collection = pool.map(
-            process_replay,
-            replays_list
-        )
+        replay_collection = list(tqdm(pool.imap(
+                process_replay,
+                replays_list,
+                chunksize=10
+            ),
+            total=len(replays_list)
+        ))
 
     # remove all None from replay_collection
     replay_collection = [x for x in replay_collection if x is not None]

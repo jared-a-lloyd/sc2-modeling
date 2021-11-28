@@ -36,7 +36,7 @@ def _get_event_data(event):
     return d
 
 # function to extract all events using get_event_data
-def get_all_events(filename, output_dir='data/events'):
+def get_all_events(filename, output_dir='data/events', return_data=False):
     """
     ____________________________________________________________________________
 
@@ -47,6 +47,10 @@ def get_all_events(filename, output_dir='data/events'):
     Args:
         filename (string): Absolute path to the replay file
         output_dir (str, optional): Directory where output csv should be stored. Defaults to 'data/events'.
+        return_data (bool, optional): If True, returns the dataframe of the
+        extracted events. Defaults to False. If multiprocessing is used for a
+        large number of replays, setting this to true might result in a memory
+        error.
 
     Returns:
         pandas.DataFrame: A dataframe containing all events from the replay file
@@ -96,4 +100,6 @@ def get_all_events(filename, output_dir='data/events'):
     # save the dataframe to a pkl file
     df.to_pickle(output_path)
 
-    return df
+    # return the dataframe if return_data is True
+    if return_data:
+        return df
