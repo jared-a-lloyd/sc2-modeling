@@ -25,6 +25,11 @@ def _separate_players(row, columns, player_id):
 
     # check if player_id is in any of the columns
     for col in columns:
+        # skip if col is not in columns
+        if col not in row.index:
+            continue
+
+        # check if player_id is in col
         if row[col] == player_id:
             return True
 
@@ -70,6 +75,14 @@ def separate_player_dfs(df):
     player1_df = df.loc[player1_index]
     player2_df = df.loc[player2_index]
     remainder_df = df.loc[remainder_index]
+
+    # check that unit_id column exists in player1_df and player2_df
+    if 'unit_id' not in player1_df.columns or \
+        'unit_id' not in player2_df.columns:
+        print('WARNING: unit_id column does not exist in player1_df or player2_df')
+        return None, None
+
+
 
     # match rows of remainder_df to either player1_df or player2_df
     # use unit_id as the matching key
@@ -191,37 +204,28 @@ def clean_player_events(df, raw_columns_list, filehash, dummies_list_location):
     # create a list of original column names in df
     original_columns = df.columns.to_list()
 
-    # convert columns to numeric
+    # list of object column targets
     object_columns = ['upgrade_type_name', 'name', 'unit_type_name']
+    # check that object columns are in df
+    if not set(object_columns).issubset(set(df.columns)):
+        print('WARNING: object columns are not in df')
+        return None
+
+    # convert object columns to numeric
     df = pd.get_dummies(df, columns=object_columns)
 
-    # create a list of column names in df that are not in original_columns
-    dummy_columns = [
-        col for col in df.columns.to_list() if col not in original_columns
-    ]   
+    # # create a list of column names in df that are not in original_columns
+    # dummy_columns = pd.Series([
+    #     col for col in df.columns.to_list() if col not in original_columns
+    # ])   
 
-    # a dummies list is used to track all the possible values for each dummy
-    # get the location of the dummies list from settings
-    dummies_list_location = dummies_list_location
+    # # a dummies list is used to track all the possible values for each dummy
+    # # get the location of the dummies list from settings
+    # dummies_list_location = dummies_list_location
 
-    # if dummies list csv does not exist, create it
-    if not os.path.exists(dummies_list_location):
-        # write dummy_columns to dummies_list_location as a csv
-        pd.DataFrame(dummy_columns).to_csv(
-            dummies_list_location,
-            index=False,
-            header=False            
-        )
-    else:
-        # read the dummies list from dummies_list_location
-        dummies_list = pd.read_csv(dummies_list_location, header=None)
-        # append any dummy_columns which are not in dummies_list
-        new_dummies_set = set(dummy_columns) - \
-            set([v[0] for v in dummies_list.values])
-        # append new_dummies_set to dummies_list
-        dummies_list = dummies_list.append(pd.DataFrame(new_dummies_set))
-        # write dummies_list to dummies_list_location
-        dummies_list.to_csv(dummies_list_location, index=False, header=False)
+    # # append dummy_columns series to csv file
+    # with open(dummies_list_location, 'a') as file:
+    #     dummy_columns.to_csv(file, header=False, index=False)
 
     return df
 
@@ -287,19 +291,54 @@ def _aggregate_frames(df, max_frame, frame_size, columns_list):
         ).mean()
 
         # create a list of starting index for each bin
-        bin_starts = [i * frame_size for i in range(num_bins)]
+        bin_ends = [(i + 1)*frame_size - 1 for i in range(num_bins)]
+        # check that the last bin ends at the max frame
+        if bin_ends[-1] > max_frame:
+            bin_ends[-1] = max_frame
 
         # index both dataframes by the bin starts
-        df_summation.index = bin_starts
-        df_mean.index = bin_starts
+        df_summation.index = bin_ends
+        df_mean.index = bin_ends
 
         # create a new index range
-        index_range = bin_starts
+        index_range = bin_ends
 
     # concatenate the two dataframes
     df = pd.concat([df_summation, df_mean], axis=1)
 
     return df, index_range
+
+
+def _remove_nan_values(df, fill_type):
+    """
+    Function to remove nan values from a dataframe.
+    For dummy columns fill nan with 0 for other columns use fill_type
+
+    Args:
+        df (pandas.DataFrame): The dataframe to clean.
+
+    Returns:
+        df (pandas.DataFrame): The cleaned dataframe.
+    """
+
+    dummy_prefixes = []
+    # create a list of prefixes for dummy columns
+    for p in ['p1_', 'p2_']:
+        for c in ['upgrade_type_name', 'name', 'unit_type_name']:
+            dummy_prefixes.append(p + c)
+
+    # find any columns that start with a dummy prefix
+    dummy_columns = [c for c in df.columns if c.startswith(tuple(dummy_prefixes))]
+
+    # if there are dummy columns, fill them with 0
+    if dummy_columns:
+        df.fillna(0, inplace=True)
+
+    # fill df with fill_type
+    df.fillna(method=fill_type, inplace=True)
+
+    return df
+
 
 def fill_missing_frames_and_agg(
     df, 
@@ -346,8 +385,7 @@ def fill_missing_frames_and_agg(
     # aggregate duplicate frames
     df, index_range = _aggregate_frames(df, max_frame, frame_size, columns_list)
 
-    # forward fill nan values
-    df = df.fillna(method=fill_type)
+    df = _remove_nan_values(df, fill_type)
 
     # fill in the missing frames
     df = df.reindex(index_range, method=fill_type)
@@ -388,6 +426,12 @@ def get_clean_events(
     assert isinstance(output_dir, str), 'output_dir must be a string'
     assert os.path.exists(output_dir), f'{output_dir} does not exist'
 
+    # if dummies_list_location.csv does not exist, create it
+    if not os.path.exists(dummies_list_location):
+        # create blank dummies_list.csv
+        with open(dummies_list_location, 'w') as f:
+            pass
+
     # read the raw dataframe
     if filename.endswith('.pkl') or filename.endswith('.zip'):
         event_df = pd.read_pickle(filename)
@@ -411,6 +455,10 @@ def get_clean_events(
 
     # separate the dataframes into player1 and player2
     player1_df, player2_df = separate_player_dfs(event_df)
+    
+    # check if either is None
+    if player1_df is None or player2_df is None:
+        return
 
     # clean the dataframes
     player1_df = clean_player_events(
@@ -425,9 +473,18 @@ def get_clean_events(
         filehash,
         dummies_list_location
     )
+    # check if either is None
+    if player1_df is None or player2_df is None:
+        return
 
     # get max frames from player1 and player2
     max_frames = max(player1_df.index.max(), player2_df.index.max())
+
+    # print warning if max_frames is not an integer or is less than 1
+    if not isinstance(max_frames, int) or max_frames < 1:
+        print(f'filehash: {filehash} - SKIPPING')
+        print('WARNING: max_frames is not an integer or is less than 1')
+        return
 
     # aggregate frames according to settings
     num_frames = frame_size
@@ -453,8 +510,11 @@ def get_clean_events(
     # concatenate the dataframes
     event_df = pd.concat([player1_df, player2_df], axis=1)
 
+    # define filename as zip for automatic pickle compression
+    output_filename = f'{output_dir}/{filehash}.zip'
+
     # save the dataframe
-    event_df.to_pickle(f'{output_dir}/{filehash}.zip')
+    event_df.to_pickle(output_filename)
 
     # return the dataframe
     if return_df:

@@ -94,7 +94,7 @@ def get_all_events(filename, output_dir='data/events', return_data=False):
     ]
 
     # name replay pkl with the filehash of the replay
-    output_name = replay.filehash + '.pkl'
+    output_name = replay.filehash + '.zip'
     output_path = os.path.join(output_dir, output_name)
 
     # save the dataframe to a pkl file
