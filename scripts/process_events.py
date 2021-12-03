@@ -1,5 +1,5 @@
 """
-Functions that require separate modules (generally for multiprocessing) are ..found here
+Functions that require separate modules (generally for multiprocessing) are found here
 
 Currently, these are:
     - get_all_events - load a replay using sc2reader and run _get_event_data on each event

@@ -32,8 +32,11 @@ class ReplayInfo:
         length_string = str(replay.game_length)
 
         # use regex to extract all numbers from length_string
-        minutes = length_string.split('.')[0]
-        seconds = length_string.split('.')[1]
+        split_string = length_string.split('.')
+        # if there is only one value, assume it is minutes
+        minutes = split_string[0]
+        if len(split_string) > 1:
+            seconds = split_string('.')[1]
 
         # convert to int in seconds
         return int(minutes)*60 + int(seconds)
@@ -51,15 +54,17 @@ class ReplayInfo:
 
 
     def _get_player_highest_league(self, replay):
-
+        
+        # the location of highest league is set using these strings for readability
         str_a = 'replay.initData'
         str_b = 'user_initial_data'
         str_c = 'highest_league'
 
         # check that replay.initData exists in key
         if str_a not in replay.raw_data.keys():
-            str_a = 'replay.initData.backup'
-
+            # some replays (like the Blizzard set) keep their data here
+            str_a = 'replay.initData.backup' 
+        
         return (
             replay.raw_data[str_a][str_b][0][str_c],
             replay.raw_data[str_a][str_b][1][str_c]
@@ -68,12 +73,14 @@ class ReplayInfo:
 
     def _get_player_mmrs(self, replay):
 
+        # the location of highest league is set using these strings for readability
         str_a = 'replay.initData'
         str_b = 'user_initial_data'
         str_c = 'scaled_rating'
 
         # check that replay.initData exists in key
         if str_a not in replay.raw_data.keys():
+            # some replays (like the Blizzard set) keep their data here
             str_a = 'replay.initData.backup'
 
         return (
@@ -140,7 +147,7 @@ class ReplayInfo:
                 # use replace to delete the player race
                 player = player.replace(race_string, '')
 
-                # create regex to find 'Player 1 - ' leaving only actual name
+                # create regex to find 'Player 1 - ' leaving only name
                 reg_str = r'Player\s\d\s\-\s'
 
                 # assert that reg_str is in player string

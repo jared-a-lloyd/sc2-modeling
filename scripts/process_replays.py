@@ -1,7 +1,14 @@
 """
 This file is used to process replays and extract the data
-Tt is used as a separate script to allow for parallel processing
-Settings can be found in replay_settings.json
+It is used as a separate script to allow for parallel processing, and for portability.
+The ReplayInfo class is required to be located at scripts/classes/ReplayInfo.py for processing
+
+Settings are specified in a scripts/replay_settings.json file. The following settings are available:
+        - replay_dir: The directory where replays are located, searches through any child folders as well
+        - sample_size: The number of replays to attempt to extract. Any that fail will reduce this amount
+        - n_jobs: Number of multiprocessing threads to use. -1 sets the maximum available, less one. Any positive int
+                    will be used as is
+        - random_seed: The random seed to be used if sampling is selected.
 """
 import json
 import os
@@ -22,17 +29,18 @@ def process_replay(filename):
     Args:
         filename (string): Absolute path to the replay file.
         filters (dict): A dictionary of filters to apply to the replay. Dictionary keys are the attributes of ReplayInfo, and values are those that should be excluded.
-
+    
     Returns:
         [type]: [description]
     """
     # load replay
+    # use try, except to not derail the entire process if a single file fails
     try:
         replay = sc2reader.load_replay(
             filename,
             load_level=2 # level 2 is all that is required for metadata
             )
-    except: # catch exceptions created by sc2reader
+    except:
         return None
 
     try:
@@ -44,14 +52,15 @@ def process_replay(filename):
 
 if __name__ == "__main__":
 
-    __spec__ = None # suppress warnings
+    # suppress warnings when running within Notebooks
+    __spec__ = None 
     
     # start timer
     timer = time.time()
 
     # load settings
-    with open("scripts/replay_settings.json", "r") as f:
-        settings = json.load(f)
+    with open("scripts/replay_settings.json", "r") as file:
+        settings = json.load(file)
 
     # get replay directory from settings
     replay_dir = settings["replay_dir"]
@@ -82,19 +91,22 @@ if __name__ == "__main__":
                 filepath = os.path.join(dirpath, filename)
                 replays_list.append(filepath)
 
+    # if the user has chosen to take a sample
     if sample_size != -1:
         # take a random sample of replays
         random.seed(random_seed)
         replays_list = random.sample(replays_list, sample_size)
 
-    # process replays
+    # set the number of processes to use
     if n_jobs == -1:
-        cpu_total = mp.cpu_count()-1
+        cpu_total = mp.cpu_count() - 1 # cpu_count() returns total number of cores
     else:
         cpu_total = n_jobs
 
     print(f'Processing {len(replays_list)} replays')
 
+    # set up and run multiprocessing pool
+    # imap is used to allow tqdm to calculate a progress bar
     with mp.Pool(processes=cpu_total) as pool:
         replay_collection = list(tqdm(pool.imap(
                 process_replay,
@@ -104,7 +116,7 @@ if __name__ == "__main__":
             total=len(replays_list)
         ))
 
-    # remove all None from replay_collection
+    # remove all None from replay_collection (failed replays)
     replay_collection = [x for x in replay_collection if x is not None]
 
     # convert replay collection to dataframe

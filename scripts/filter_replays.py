@@ -1,7 +1,9 @@
 """
-This script contains the function filter_replays that can be used to filter replays in a dataframe according to a specified (or default) set of criteria.
+This script contains the function filter_replays that can be used 
+to filter replays in a dataframe according to a specified (or default) set of criteria.
 
-A number of supporting functions are also included, these can be identified by an underscore at the beginning of the function name.
+A number of supporting functions are also included, these can be identified 
+by an underscore at the beginning of the function name.
 """
 import pandas as pd
 import numpy as np

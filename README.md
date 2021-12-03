@@ -4,7 +4,7 @@ This project is an attempt to create a predictor for the outcome of a StarCraft 
 
 SC2 replays are stored as `.SC2Replay` files. These files do not contain any information about the game state at any point, but rather only the events that occurred during the game. This means that the game state is not known at any point. The model will attempt to use the occurrence and sequence of events to predict the outcome of the game. The game will divided up into manageable chunks of time, and the model will attempt to predict the outcome of each chunk of time, with information from all previous chunks being included.
 
-It is hoped that a secondary outcome of the modeling process will be an prediction of victory at time = 0, which may be able to give information about the descrepancies in balance between different races, or maps that favor a certain race.
+It is hoped that a secondary outcome of the modeling process will be an prediction of victory at time = 0, which may be able to give information about the discrepancies in balance between different races, or maps that favor a certain race.
 
 Data are extracted using the `sc2reader` python package, which can be install by PiP, or found __[here](https://github.com/ggtracker/sc2reader)__. In the raw form, `sc2reader` provides events at each frame of the game (a frame is about a 16th of an in-game second - and an in-game second is 1&divide;1.2 &asymp; 0.83 real-time seconds).
 
@@ -17,7 +17,7 @@ The project is constructed as a series of Jupyter notebooks as part of my Brains
     * `download_spawning.ipynb` - Automating the download of replay files as .zip.
     * `extract_and_map.ipynb` - Creating a json map of the files that are downloaded, and unzipping all .zip to their own folders.
 * `get_replay_data/`
-    * `explore_data_structure.ipynb` - Unpacking an individual replay into a json dict and mapping out the generalised layout of data within the replay using `sc2reader`. Uses multithreading to speed up the process.
+    * `explore_data_structure.ipynb` - Unpacking an individual replay into a json dict and mapping out the generalized layout of data within the replay using `sc2reader`. Uses multithreading to speed up the process.
     * `Exploratory_Data_Analysis.ipynb` - Exploring the data structure of the replay using `sc2reader`.
 * `info/`
     * `A tutorial on sc2reader_ events and units _ MGD’s blog.pdf' - A basic tutorial on interfacing with `sc2reader` found online

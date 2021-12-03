@@ -1,6 +1,9 @@
 # ignore data folder
 data/*
 
+# ignore ipynb_checkpoints
+.ipynb_checkpoints
+
 # ignore SC2Replay files
 *.SC2Replay
 *.zip
@@ -12,11 +15,16 @@ commit-message*
 *.txt
 
 # ignore workspace files
-.vscode*
+.vscode
 
 get_replays.py
 classes/*
 
+# pickle, pyconfig, and numpy array files
 *.pyc
 *.pkl
 *.npy
+
+# research papers
+CAEPIA2018_paper_247.pdf
+paper_3.pdf
