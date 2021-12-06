@@ -8,19 +8,32 @@ It is hoped that a secondary outcome of the modeling process will be an predicti
 
 Data are extracted using the `sc2reader` python package, which can be install by PiP, or found __[here](https://github.com/ggtracker/sc2reader)__. In the raw form, `sc2reader` provides events at each frame of the game (a frame is about a 16th of an in-game second - and an in-game second is 1&divide;1.2 &asymp; 0.83 real-time seconds).
 
-Replays were downloaded from __[SpawningTool](https://lotv.spawningtool.com/replays/)__.
+Replays were downloaded from __[SpawningTool](https://lotv.spawningtool.com/replays/)__ and __[Blizzard](https://github.com/Blizzard/s2client-proto#downloads)__.
 
-The project is constructed as a series of Jupyter notebooks as part of my Brainstation capstone project. I hope to be able to link all the notebooks to simulate a workflow from one notebook to the next.
+The project is constructed as a series of Jupyter notebooks as part of my Brainstation capstone project.
 
 ## Contents
-* `web_scraping/`
-    * `download_spawning.ipynb` - Automating the download of replay files as .zip.
-    * `extract_and_map.ipynb` - Creating a json map of the files that are downloaded, and unzipping all .zip to their own folders.
-* `get_replay_data/`
-    * `explore_data_structure.ipynb` - Unpacking an individual replay into a json dict and mapping out the generalized layout of data within the replay using `sc2reader`. Uses multithreading to speed up the process.
-    * `Exploratory_Data_Analysis.ipynb` - Exploring the data structure of the replay using `sc2reader`.
-* `info/`
-    * `A tutorial on sc2reader_ events and units _ MGD’s blog.pdf' - A basic tutorial on interfacing with `sc2reader` found online
-    * `event_attribute_dict.json` - A json map of the layout of data within the events section of a `sc2reader` output.
-    * `replay_json.json` - The general layout of an `sc2reader` object from the top level down.
-    * `overall_process_flow.drawio` - A map of the process that is used from data download to modeling.
+* `Notebook 1 - Data Collection.ipynb`
+* `Notebook 2 - Metadata Analysis and Modeling.ipynb`
+* `Notebook 3 - Event Data Analysis and Modeling.ipynb`
+* `Technical Report.pdf` - A summary of the work done, and findings of this project.
+* `env/` - A folder containing the yml files which can be used to generate the environments for the project.
+* `img/` - A folder containing the images used in the project.
+* `info/` - General information used in the project
+    * `clean_master_columns_list.csv` - A list of all unique columns in all cleaned event data files. Used to ensure all model inputs are identical.
+    * `raw_columns_list.csv` - A csv detailing how each column of the dataframe output by `process_events.py` is handled.
+* `scripts/` - A collection of scripts used to generate the data.
+    * `calculate_game_length.py` - A script to calculate the length of a game from the number of frames in the replay.
+    * `event_data_cleaning.py` - Clean event data and store as .zip pickles.
+    * `filter_replays.py` - Filter replays based on game length, and other Metadata.
+    * `get_clean_events.py` - Read pickle or csv files of extracted event data and clean it. Storing as .zip pickles.
+    * `process_events.py` - Use `sc2reader` to process replays and extract and store event data.
+    * `process_replays.py` - Use `sc2reader` to process replays and extract and store Metdata.
+    * `reduce_mem_usage.py` - Reduce memory usage of a pandas dataframe. (Currently unused)
+    * `repay_settings.json` - Settings for `process_replays.py`.
+    * `classes/` - A collection of classes used in this project
+        * `BatchGenerator.py` - A class to handle reading npy files and generating batches of data for a Keras model.
+        * `ReplayInfo.py` - A class to extract replay metadata from an `sc2reader` replay object.
+* `.gitignore` - A file containing a list of files to ignore when committing to git.
+* `README.md` - A file containing a summary of the project.
+
