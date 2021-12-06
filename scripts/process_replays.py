@@ -18,7 +18,7 @@ import sc2reader
 from scripts.classes import ReplayInfo
 import pandas as pd
 import time
-import tqdm
+from tqdm import tqdm
 
 def process_replay(filename):
     """
@@ -113,7 +113,9 @@ if __name__ == "__main__":
                 replays_list,
                 chunksize=10
             ),
-            total=len(replays_list)
+            total=len(replays_list),
+            desc='Processing replays',
+            unit='replays'
         ))
 
     # remove all None from replay_collection (failed replays)

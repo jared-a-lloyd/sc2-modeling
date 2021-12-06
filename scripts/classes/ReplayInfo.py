@@ -36,7 +36,7 @@ class ReplayInfo:
         # if there is only one value, assume it is minutes
         minutes = split_string[0]
         if len(split_string) > 1:
-            seconds = split_string('.')[1]
+            seconds = split_string[1]
 
         # convert to int in seconds
         return int(minutes)*60 + int(seconds)
