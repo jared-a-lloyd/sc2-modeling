@@ -13,9 +13,10 @@ Replays were downloaded from __[SpawningTool](https://lotv.spawningtool.com/repl
 The project is constructed as a series of Jupyter notebooks as part of my Brainstation capstone project.
 
 ## Contents
-* `Notebook 1 - Data Collection.ipynb`
-* `Notebook 2 - Metadata Analysis and Modeling.ipynb`
-* `Notebook 3 - Event Data Analysis and Modeling.ipynb`
+* `Notebook 1 - Data Collection.ipynb`.
+* `Notebook 2 - Metadata Analysis and Modeling.ipynb`.
+* `Notebook 3 - Event Data Analysis and Modeling.ipynb`.
+* `Ensemble.ipynb` - Training and testing ensemble calculation of probabilities.
 * `Technical Report.pdf` - A summary of the work done, and findings of this project.
 * `env/` - A folder containing the yml files which can be used to generate the environments for the project.
 * `img/` - A folder containing the images used in the project.
